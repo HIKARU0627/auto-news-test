@@ -83,7 +83,8 @@ jobs:
       - name: Commit and push if changed
         run: |
           pwd
+          ls -la
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add .
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update" && git push origin 1464-auto-news-update)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update" && git push origin main)
