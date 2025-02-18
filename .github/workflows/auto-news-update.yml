@@ -13,39 +13,40 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          node-version: "20"
+          python-version: "3.10"
+          architecture: "x64"
 
       - name: Install dependencies
         run: |
-          npm install --legacy-peer-deps
-          npm install @octokit/graphql
+          python -m pip install --upgrade pip
+          pip install -r src/auto-news/scripts/requirements.txt
 
       - name: Get pull request title
         run: |
           PR_TITLES=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&per_page=50" | \
-            jq -r '.[] | select(.labels[].name == "decap-cms/draft") | .title' | \
+            "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&per_page=100" | \
+            jq -r '.[] | select(.labels[].name == "decap-cms/pending_publish") | select(.title | startswith("Create")) | select(.title | contains("9999") | not) | .title' | \
             jq -R -s -c 'split("\n")[:-1]')
           echo "PR_TITLES=$PR_TITLES" >> $GITHUB_ENV
 
-      - name: Generate News
+      - name: News Update
         run: |
-          node .github/scripts/generate-news.js
+          cd src/auto-news/scripts
+          python auto-news-update.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push if changed
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto generate news" && git push)
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add .
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update" && git push origin 1464-auto-news-update)
 
   create-news-manual:
     if: github.event_name == 'workflow_dispatch'
@@ -76,14 +77,11 @@ jobs:
         run: |
           cd src/auto-news/scripts
           python auto-news-update.py
-          ls -la 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push if changed
         run: |
-          pwd
-          ls -la 
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add .
