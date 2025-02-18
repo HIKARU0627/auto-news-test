@@ -1,0 +1,26 @@
+{
+    "cSpell.words": [ // スペルチェッカーの追加辞書
+        "devcontainers",
+        "pyright",
+        "uvicorn",
+        "fastapi",
+        "streamlit",
+        "litellm",
+        "pydantic",
+        "openai",
+        "boto3",
+        "dotenv",
+    ],
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/.venv/lib/python3.12/site-packages"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "isort.args":["--profile", "black"]
+}

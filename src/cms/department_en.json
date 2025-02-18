@@ -1,0 +1,27 @@
+{
+  "departments_en": [
+    { "name": "Education Center for International Students" },
+    { "name": "G30" },
+    { "name": "Graduate School of Environmental Studies" },
+    { "name": "Graduate School of Information Science" },
+    { "name": "Graduate School of International Development" },
+    { "name": "Graduate School of Languages and Cultures" },
+    { "name": "Graduate School of Mathematics" },
+    { "name": "Graduate School of Pharmaceutical Sciences" },
+    { "name": "Institute of Liberal Arts & Sciences" },
+    {
+      "name": "School of Agricultural Sciences / Graduate School of Bioagricultural Sciences"
+    },
+    { "name": "School of Economics / Graduate School of Economics" },
+    {
+      "name": "School of Education / Graduate School of Education and Human Development"
+    },
+    { "name": "School of Engineering / Graduate School of Engineering" },
+    { "name": "School of Humanities / Graduate School of Humanities" },
+    { "name": "School of Informatics and Sciences" },
+    { "name": "School of Informatics / Graduate School of Infomatics" },
+    { "name": "School of Law / Graduate School of Law" },
+    { "name": "School of Medicine / Graduate School of Medicine" },
+    { "name": "School of Science / Graduate School of Science" }
+  ]
+}

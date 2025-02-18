@@ -1,0 +1,116 @@
+name: Build and deploy to cloudflare of cms's preview
+on:
+  push:
+    branches:
+      - "cms/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: make URL
+        if: success()
+        id: make-url
+        run: string=$(echo ${{ github.ref_name }} | sed -e 's/cms\///g' | sed -e 's/courses-en/en\/courses/g'); echo "::set-output name=url::/$string"
+
+      - name: notify to Slack of begining
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_OF_DEPLOY }}
+          SLACK_MESSAGE: "`${{ steps.make-url.outputs.url }}`の下書きが更新されました．\nCloudflare のプレビューをビルド中です．:loading:"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          MSG_MINIMAL: "true"
+          SLACK_COLOR: "#A9A9A9"
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Project Dependencies
+        run: yarn install
+
+      - name: Build Project
+        run: npx gatsby build --prefix-paths
+
+      - name: Install wrangler
+        run: npm install -g wrangler@3.80
+
+      - name: Publish to Cloudflare Pages
+        id: cloudflare_pages_deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages deploy ./public --project-name=nuocw-release --commit-dirty=true
+
+      - name: create job summary
+        run: |
+          echo "## Cloudflare Pages Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Name | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "| :-- | :-- |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Last commit:** | [${{ github.sha }}](https://github.com/NUOCW-Project/nuocw-release/commit/${{ github.sha }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Preview URL**: | ${{ steps.cloudflare_pages_deploy.outputs.deployment-url }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Branch Preview URL**: | ${{ steps.cloudflare_pages_deploy.outputs.deployment-alias-url }} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Add URL of commit preview as commit status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const sha = context.payload.pull_request?.head.sha ?? context.sha;
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              context: 'Preview of commit',
+              description: 'Click "Details" to check commit preview.',
+              state: 'success',
+              sha,
+              target_url: "${{ steps.cloudflare_pages_deploy.outputs.deployment-url }}",
+            });
+
+      - name: Add URL of branch preview as commit status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const sha = context.payload.pull_request?.head.sha ?? context.sha;
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              context: 'Preview of branch',
+              description: 'Click "Details" to check branch preview.',
+              state: 'success',
+              sha,
+              target_url: "${{ steps.cloudflare_pages_deploy.outputs.deployment-alias-url }}",
+            });
+
+      - name: notify URL to Slack
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_OF_DEPLOY }}
+          SLACK_MESSAGE: "Cloudflareのプレビューのビルドが完了しました！:rocket:\n`${{ steps.make-url.outputs.url }}`をプレビューできます．\n${{ steps.cloudflare_pages_deploy.outputs.deployment-alias-url }}${{ steps.make-url.outputs.url }}\n※リンク先のプレビューは下書きの内容変更ごとに更新されます．"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          MSG_MINIMAL: "true"
+          SLACK_COLOR: good
+
+      - name: Notification to Slack on Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_OF_DEPLOY }}
+          SLACK_MESSAGE: "プレビューのビルド・デプロイに失敗しました... :cry:"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          SLACK_COLOR: danger

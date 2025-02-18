@@ -1,0 +1,92 @@
+[
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/39c068a43ad48e52a5df7d1b95d59ca1148f72d3",
+    "img": "img/lab_intro/lite/opencampus2017/german.jpg",
+    "department": "文学研究科",
+    "labname": "ドイツ語ドイツ文学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/281e6dcae7fc4cdbfaff966207d7984510f4e30d",
+    "img": "img/lab_intro/lite/opencampus2017/french.jpg",
+    "department": "文学研究科",
+    "labname": "フランス語フランス文学第1"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/43885046684bbd325f4b6d37f2e6c89538317e47",
+    "img": "img/lab_intro/lite/opencampus2017/english.jpg",
+    "department": "文学研究科",
+    "labname": "英語学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/0cc40617a3c996345198e93dceb91570247aad04",
+    "img": "img/lab_intro/lite/opencampus2017/english-american_lite.jpg",
+    "department": "文学研究科",
+    "labname": "英米文学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/dd32992443067288604fb01fb53102331bca41da",
+    "img": "img/lab_intro/lite/opencampus2017/language.jpg",
+    "department": "文学研究科",
+    "labname": "言語学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/f56f8c6aca2ac06792c1ce0009b0acd4ff289698",
+    "img": "img/lab_intro/lite/opencampus2017/japanese.jpg",
+    "department": "文学研究科",
+    "labname": "日本語学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/cdf1556b72bc4652a760d4df91a512b95c9e12b9",
+    "img": "img/lab_intro/lite/opencampus2017/cultural_anthropology.jpg",
+    "department": "文学研究科",
+    "labname": "文化人類学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/79a484a645e641494a32de068a08e58d131f3b64",
+    "img": "img/lab_intro/lite/opencampus2017/geography.jpg",
+    "department": "地理学専攻",
+    "labname": "地理学教室/講座"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/252a1c807cfa58970f09d25fb86b5f9f6d7c986c",
+    "img": "img/lab_intro/lite/psychology.jpg",
+    "department": "人文学科",
+    "labname": "心理学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/ed6fdc5ae8c5ca5ab5dd8b5baf240cb5fd58195a",
+    "img": "img/lab_intro/lite/sociology.jpg",
+    "department": "人文学科",
+    "labname": "社会学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/a0b4dc575ec868bf4d59833c18b1e5b5f70c8ede",
+    "img": "img/lab_intro/lite/art_history.jpg",
+    "department": "人文学科",
+    "labname": "美学美術史学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/dead51f4e0fdc419df28780677cd88e5e295161e",
+    "img": "img/lab_intro/lite/indian_culture.jpg",
+    "department": "人文学科",
+    "labname": "インド文化学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/b09b92ee48361c23567968f8f229e21ddbbbc3d0",
+    "img": "img/lab_intro/lite/occidental_history.jpg",
+    "department": "人文学科",
+    "labname": "西洋史学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/fee6d8f5293add2218e399b183c8a09cb6f1ff37",
+    "img": "img/lab_intro/lite/chinese_philosophy.jpg",
+    "department": "人文学科",
+    "labname": "中国哲学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/835a33255fe44d65bb24e4a522cfd9e5f5f3cba6",
+    "img": "img/lab_intro/lite/japanese_literature.jpg",
+    "department": "人文学科",
+    "labname": "日本文学研究室"
+  }
+]

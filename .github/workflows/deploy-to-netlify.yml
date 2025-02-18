@@ -1,0 +1,71 @@
+name: Gatsby build and deploy to Netlify
+on:
+  push:
+    branches:
+      - "master"
+      # - 'cms/**'
+  workflow_dispatch:
+
+jobs:
+  notify-url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify URL to Slack
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_OF_DEPLOY }}
+          SLACK_MESSAGE: "masterブランチのビルドが開始されました！:loading:\nビルド後，本番環境とNetlify上で確認できます．"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          MSG_MINIMAL: "true"
+          SLACK_COLOR: "#A9A9A9"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Project Dependencies
+        run: yarn install
+      - name: Build Project
+        run: npx gatsby build
+
+      - name: Deploy to Netlify
+        id: deploy-netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=public/ --prod
+
+      - name: Notification to Slack on Success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_OF_DEPLOY }}
+          SLACK_MESSAGE: "デプロイ完了しました！:rocket:\n本番環境とNetlifyが更新済みです！\n\n- https://ocw.nagoya-u.jp/ \n- https://ocw-netlify-preview.netlify.app/ \n\nこの更新は本番環境とNetlify上で確認できます．"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          SLACK_COLOR: good
+
+      - name: Notification to Slack on Failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL_OF_DEPLOY }}
+          SLACK_MESSAGE: "本番環境へのデプロイに失敗しました... :cry:\n\n:警告:公開中のサイトの状況を確認してください．:警告:\nhttps://ocw.nagoya-u.jp/"
+          SLACK_USERNAME: "GitHub Actions"
+          SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          SLACK_COLOR: danger

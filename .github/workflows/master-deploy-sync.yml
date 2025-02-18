@@ -1,0 +1,45 @@
+name: Gatsby build and deploy to a www server
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect Workflow Telemetry
+        uses: runforesight/workflow-telemetry-action@v1
+      - uses: actions/checkout@v4
+      - name: Use Node.js 18.12.1
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.12.1"
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock') }}
+      - name: Install Project Dependencies
+        run: yarn install
+      - name: Install Gatsby CLI
+        run: npm install -g gatsby-cli@5.10.0
+      - name: Build Project
+        run: gatsby clean && GATSBY_CPU_COUNT=2 gatsby build --prefix-paths
+      - name: List output files
+        run: |
+          ls -laFG
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          path: public/
+          remote_path: ${{ secrets.PATH_MASTER }}
+          remote_host: ${{ secrets.HOST_MASTER }}
+          remote_user: ${{ secrets.USER_MASTER }}
+          remote_key: ${{ secrets.KEY_MASTER }}
+      - name: post to elasticsearch server
+        run: |
+          curl -k -u elastic:nuocw -XDELETE https://dev.ocw.media.nagoya-u.ac.jp/search/test_index?pretty=true
+          curl -k -u elastic:nuocw -XPUT 'https://dev.ocw.media.nagoya-u.ac.jp/search/test_index?pretty' -H "Content-Type: application/json" --data-binary @${{github.workspace}}/static/elasticsearch_index_mapping.json
+          curl -k -u elastic:nuocw -XPOST https://dev.ocw.media.nagoya-u.ac.jp/search/_bulk?pretty -H "Content-Type: application/x-ndjson" --data-binary @${{github.workspace}}/static/elasticsearch_data.json

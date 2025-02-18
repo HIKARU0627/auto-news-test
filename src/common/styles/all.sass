@@ -1,0 +1,424 @@
+@charset "utf-8"
+
+@import "~bulma/sass/utilities/initial-variables"
+
+// nu-color
+$nu-color: #006e4f
+
+// responsiveness
+$gap: 32px
+$tablet: 768px
+$desktop: 960px+(2*$gap)
+$widescreen: 1152px+(2*$gap)
+$fullhd: 1344px+(2*$gap)
+
+// Config vars
+$theme-color: $nu-color
+$theme-sub-color: #00996e
+$theme-color-invert: #ffffff
+
+$primary: $theme-color
+$primary-invert: $theme-color-invert
+$body-color: #333
+$black: #2b2523
+
+// navbar settings
+$navbar-background-color: $theme-color
+$navbar-item-color: $theme-color-invert
+$navbar-item-hover-color: $black
+$navbar-item-hover-background-color: $theme-sub-color
+$navbar-dropdown-background-color: $theme-color
+
+// font setting
+$family-sans-serif: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, "M+ 1p", sans-serif
+
+//html setting
+html
+  scroll-behavior: smooth
+
+@media (max-width: 768px)
+  html
+    scroll-padding-top: 128px
+
+@media (min-width: 768px)
+  html
+    scroll-padding-top: 96px
+
+// body setting
+body
+  margin: 0
+
+.theme-color
+  color: $theme-color
+
+.navbar .navbar-menu
+  box-shadow: none !important
+
+.content .taglist
+  list-style: none
+  margin-bottom: 0
+  margin-left: 0
+  margin-right: 1.5rem
+  margin-top: 1.5rem
+  display: flex
+  flex-wrap: wrap
+  justify-content: left
+  align-items: center
+  li
+    padding: 0 2rem 1rem 0
+    margin-bottom: 1.5rem
+    margin-top: 0
+
+// Helper Classes
+.full-width-image-container
+  width: 100vw
+  height: 40vh
+  position: relative
+  left: 50%
+  right: 50%
+  margin: 2em -50vw
+  background-size: cover
+  background-position: bottom
+  display: flex
+  justify-content: center
+  align-items: center
+
+.full-width-image
+  width: 100vw
+  height: 40vh
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-wrap: wrap
+
+.full-width-image-top
+  width: 100vw
+  max-height: 550px
+  height: 550vw
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-wrap: wrap
+
+.full-width-image-top-with-search
+  width: 100%
+  max-height: 550px
+  height: 550vw
+  display: flex
+  justify-content: space-between
+  align-items: center
+  flex-wrap: wrap
+
+.full-width-image-top-touch
+  width: 100vw
+  height: 100vw
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-wrap: wrap
+
+.btn
+  display: inline-block
+  padding: 12px 16px 10px
+  font-size: 18px
+  font-size: 1rem
+  line-height: 1.25
+  background-color: #fff
+  border-radius: .25rem
+  text-decoration: none
+  font-weight: 700
+  color: #CC3700
+  text-align: center
+  -webkit-box-shadow: inset 0 0 0 2px #CC3700
+  box-shadow: inset 0 0 0 2px #f40
+  -webkit-transition: all .15s ease
+  transition: all .15s ease
+
+.margin-top-0
+  margin-top: 0 !important
+
+.add-padding-bottom
+  padding-bottom: 4rem
+
+.add-hoverable
+  &:hover
+    opacity: 0.7
+
+.navbar-item .icon
+  color: $primary
+// Override for use of svg's from https://simpleicons.org/
+.icon svg
+  width: 1.5rem
+  height: 1.5rem
+  fill: currentColor
+.navbar-brand .navbar-item.logo
+  padding: 0 1rem
+footer.footer
+  padding: 3rem 0rem 0rem
+  background-color: transparent
+
+//Menu overrides
+$menu-item-color: $white-ter
+$menu-item-hover-color: $white-ter !important
+$menu-item-hover-background-color: $theme-sub-color
+$menu-item-active-color: $theme-color-invert
+$menu-item-active-background-color:	$theme-color-invert
+$menu-list-border-left: 1px solid $theme-color-invert
+$menu-label-color: $white-ter
+
+.menu-label
+  font-size: 1em !important
+  text-align: left
+.menu-list
+  list-style: none !important
+  text-align: left
+.social
+  padding: 2em
+.social a
+  padding: .5em .5em .3em .5em
+  border-radius: 1em
+  background-color: $white-ter
+  margin: .5em
+  width: 1em
+  height: 1em
+  vertical-align: middle
+  display: inline
+
+.is-fixed-top
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  z-index: 30
+
+// sub-header
+.sub-navbar
+  min-height: 2rem !important
+  background-color: #323232
+  position: relative
+  z-index: 30
+  font-size: 0.8em
+  .container
+    min-height: 2rem !important
+    display: flex
+    align-items: center
+
+// course roll
+.course-list-item.notification
+  padding: 1rem
+  border-radius: 0
+  background-color: white
+.course-list-item.box
+  border-radius: 0
+  box-shadow: 0 2px 3px rgba(43, 37, 35, 0.1)
+.course-list-item .featured-thumbnail
+  margin: 0 0 1em 0
+
+// top roll
+.top-list-item.notification
+  padding: 1rem
+  border-radius: 0
+  background-color: white
+.top-list-item.box
+  border-radius: 0
+  box-shadow: 0 2px 3px rgba(43, 37, 35, 0.1)
+.top-list-item .featured-thumbnail
+  margin: 0 0 1em 0
+
+// navbar roll
+.navbar-list-item.notification
+  padding: 0.5rem
+  background-color: transparent
+  color: white
+.navbar-list-item.box
+  box-shadow: 0 0 0 transparent
+.navbar-list-item .featured-thumbnail
+  margin: 0 0 1em 0
+
+.content .farewell_taglist
+  margin: 0
+  display: flex
+  flex-wrap: wrap
+  border-top: none
+  border-left: none
+  justify-content: left
+  align-items: center
+  li
+    list-style: none
+    padding: 0 1.5rem 0.5rem 0
+    margin-top: 0
+
+//recommend roll
+.content .course_taglist
+  margin-bottom: 0
+  margin-left: 0
+  margin-right: 0
+  margin-top: 0
+  display: flex
+  flex-wrap: wrap
+  justify-content: left
+  align-items: center
+  li
+    list-style: none
+    padding: 0 1.5rem 0.5rem 0
+    margin-top: 0
+
+.recommend-scroll-x
+  display: flex
+  width: 100%
+  height: auto
+  overflow-x: scroll
+  gap: 1.5rem
+
+.recommend-scroll-x::-webkit-scrollbar 
+  width: 100%
+  height: 1rem
+  border-radius: 0.25rem
+
+.recommend-scroll-x::-webkit-scrollbar-thumb 
+  --bg-opacity: 1
+  background-color: #aaa
+  border-radius: 0.25rem
+
+.recommend-scroll-x::-webkit-scrollbar-track 
+  background: #ddd
+  border-radius: 7px; 
+
+
+// header
+.is-fixed-top
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  z-index: 30
+
+//固定ナビゲーションバーがページコンテンツに重ならないように. 
+
+.has-navbar-fixed-top
+  padding-top: 104px !important
+
+@media screen and (min-width:768px)
+  .has-navbar-fixed-top
+    padding-top: 88px !important
+
+
+.header-title
+  box-shadow: 0.5rem 0 0 $theme-color, -0.5rem 0 0 $theme-color
+  background-color: $theme-color
+  color: white
+  padding: 1rem
+
+// news
+.news-list
+  padding: 0 0.5rem !important;
+  margin: 0 !important;
+
+.news-class
+  padding: 0.5rem;
+  margin: 1rem;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #003399;
+  
+.news-topics
+  padding: 0.5rem;
+  margin: 1rem;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #cc0000;
+  
+.news-farawell
+  padding: 0.5rem;
+  margin: 1rem;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #ee80a2;
+  
+.news-special
+  padding: 0.5rem;
+  margin: 1rem;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #5dcc5a;
+  
+.news-default
+  padding: 0.5rem;
+  margin: 1rem;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #888888;
+
+// h2 style
+.is-h2
+  position: relative
+  padding-left: 3rem !important
+  padding-bottom: 0.3rem !important
+  border-bottom: 2px solid $theme-color
+  &:before, &:after
+    content: ""
+    position: absolute
+    margin: auto
+  &:before
+    width: 1rem
+    height: 1rem
+    top: 0.4rem
+    left: 1rem
+    background: $theme-color
+    transform: rotate(50deg)
+  &:after
+    width: 0.5rem
+    height: 0.5rem
+    top: 1.6rem
+    left: 0.5rem
+    background: $theme-color
+    transform: rotate(20deg)
+
+// h3 style
+.is-h3
+  color: $theme-color
+  position: relative
+  padding-left: 2.5rem !important
+  border-bottom: 1px solid $theme-color
+  &:before, &:after
+    content: ""
+    position: absolute
+    bottom: 0
+    width: 1rem
+    height: 1rem
+    border: 2px solid $theme-color
+    margin: auto
+  &:before
+    top: -0.5rem
+    left: 0rem
+  &:after
+    top: 0.5rem
+    left: 0.5rem
+
+.styled-title
+  h2
+    @extend .is-h2
+  h3
+    @extend .is-h3
+
+@import "~bulma"
+
+// responsiveness
+  +tablet-only
+  .blog-list-item .featured-thumbnail
+    flex-basis: 50%
+
+    +mobile
+  .blog-list-item header
+    display: block
+  .blog-list-item .featured-thumbnail
+    text-align: center
+    max-width: 70%
+    margin: 0 0 1em
+
+

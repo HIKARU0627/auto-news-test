@@ -1,0 +1,1173 @@
+backend:
+  #  name: git-gateway
+  name: github
+  repo: NUOCW-Project/nuocw-release
+  branch: master
+  commit_messages:
+    create: "Create {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "[skip ci] Upload “{{path}}”"
+    deleteMedia: "[skip ci] Delete “{{path}}”"
+
+# ローカルGit RepositoryでCMSを有効にする(まだβ版の機能).->エラー頻発により断念
+local_backend: true
+
+locale: "ja"
+
+publish_mode: editorial_workflow
+media_folder: static/img
+public_folder: /img
+
+collections:
+  - label: "部局一覧"
+    name: department_collection
+    hide: true
+    files:
+      - label: departments_file
+        name: departments_file
+        file: /src/cms/department.json
+        fields:
+          - label: departments
+            label_singular: department
+            name: departments
+            widget: list
+            fields:
+              - label: Name
+                name: name
+                widget: string
+  - label: "部局一覧(英語)"
+    name: department_en_collection
+    hide: true
+    files:
+      - label: departments_en_file
+        name: departments_en_file
+        file: /src/cms/department_en.json
+        fields:
+          - label: departments_en
+            label_singular: department_en
+            name: departments_en
+            widget: list
+            fields:
+              - label: Name
+                name: name
+                widget: string
+
+  - name: "courses"
+    label: "Courses"
+    summary: "{{fields.course_id}}-{{fields.title}}"
+    folder: "src/pages/courses"
+    create: true
+    delete: true
+    # slug: "{{year}}-{{month}}-{{day}}-{{slug}}" #これはデフォルト設定
+    slug: "{{fields.course_id}}-{{slug}}-{{year}}"
+    fields:
+      - {
+          label: "Template Key",
+          name: "templateKey",
+          default: "courses",
+          widget: "hidden",
+        }
+      - {
+          label: "Course_id",
+          name: "course_id",
+          widget: "string",
+          hint: "重複せず連番となるよう, 仕事依頼側が設定",
+        }
+      - { label: "Title", name: "title", widget: "string", hint: "講義名" }
+      - {
+          label: "Lecturer",
+          name: "lecturer",
+          widget: "string",
+          hint: "講師名",
+        }
+      - label: "Department"
+        name: "department"
+        hint: "開講部局 (例) ○学部／〇〇××研究科"
+        widget: relation
+        collection: department_collection
+        file: departments_file
+        options_length: 100
+        searchFields: ["departments.*.name"]
+        multiple: false
+        valueField: departments.*.name
+      - label: "Other Department"
+        name: "subdepartment"
+        hint: "2つ目以降の開講部局が指定されている場合"
+        required: false
+        multiple: true
+        widget: relation
+        collection: department_collection
+        file: departments_file
+        options_length: 100
+        searchFields: ["departments.*.name"]
+        valueField: departments.*.name
+      - {
+          label: "Term",
+          name: "term",
+          widget: "string",
+          hint: "学期 (例) 2020年度春学期",
+        }
+      - {
+          label: "Target",
+          name: "target",
+          widget: "string",
+          hint: "対象者 (例) 〇学部×学科△年生",
+        }
+      - {
+          label: "Classes",
+          name: "classes",
+          widget: "string",
+          required: false,
+          hint: "授業回数 (例) 週１回全15回",
+        }
+      - {
+          label: "Credit",
+          name: "credit",
+          widget: "string",
+          required: false,
+          hint: "単位数 (例) １単位",
+        }
+      - { label: "Attachents", name: "attachments", widget: "hidden" }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "hidden",
+          required: false,
+          hint: "カテゴリー (例) 教養",
+        } # widget: "list"
+      - {
+          label: "Tags",
+          name: "tags",
+          widget: "list",
+          required: false,
+          hint: "タグ (例) 生物",
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+          hint: "概要 (例) 生物学の基礎を学ぶ",
+        }
+      - {
+          label: "Featured Post",
+          name: "featuredpost",
+          required: false,
+          widget: "boolean",
+          hint: "トップページにおいて色付けのロールにするならONに.",
+        }
+      - {
+          label: "Featured Movie",
+          name: "movie",
+          widget: "string",
+          required: false,
+          hint: "映像の外部リンク https:…",
+        }
+      # - {label: "Featured Image", name: "featuredimage", widget: "string", required: false, hint: "画像をアップロードして選択. 上の映像がない場合のみ表示される. "}
+      - {
+          label: "Featured Image (URL)",
+          name: "featuredimageURL",
+          widget: "string",
+          required: false,
+          hint: "Featured Imageが外部リンクの場合 https:…",
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: "HH:mm:ss+09:00",
+          hint: "更新日時 入力・編集作業をした日時を記入 (例) 2024-10-07T19:21:00+09:00",
+        }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          hint: "本文 Markdownで記述.",
+        }
+
+  - name: "farewell"
+    label: "Farewell"
+    summary: "{{fields.course_id}}-{{fields.title}}"
+    folder: "src/pages/farewell"
+    create: true
+    delete: true
+    # slug: "{{year}}-{{month}}-{{day}}-{{slug}}" #これはデフォルト設定
+    slug: "{{fields.course_id}}-{{slug}}-{{year}}"
+    fields:
+      - {
+          label: "Template Key",
+          name: "templateKey",
+          default: "farewell",
+          widget: "hidden",
+        }
+      - {
+          label: "Course_id",
+          name: "course_id",
+          widget: "string",
+          hint: "重複せず連番となるよう, 仕事依頼側が設定",
+        }
+      - { label: "Title", name: "title", widget: "string", hint: "講義名" }
+      - {
+          label: "Lecturer",
+          name: "lecturer",
+          widget: "string",
+          hint: "講師名",
+        }
+      - {
+          label: "Date",
+          name: "lecturedate",
+          widget: "string",
+          required: false,
+          hint: "日時 (例) 2020/04/30 13:00-14:45",
+        }
+      - {
+          label: "Place",
+          name: "place",
+          widget: "string",
+          required: false,
+          hint: "場所 (例) 全学教育棟S13教室",
+        }
+      - label: "Department"
+        name: "department"
+        hint: "開講部局 (例) ○学部／〇〇××研究科"
+        widget: relation
+        collection: department_collection
+        file: departments_file
+        options_length: 100
+        searchFields: ["departments.*.name"]
+        multiple: false
+        valueField: departments.*.name
+
+      - label: "Other Department"
+        name: "subdepartment"
+        hint: "2つ目以降の開講部局が指定されている場合"
+        required: false
+        multiple: true
+        widget: relation
+        collection: department_collection
+        file: departments_file
+        options_length: 100
+        searchFields: ["departments.*.name"]
+        valueField: departments.*.name
+      - {
+          label: "Term",
+          name: "term",
+          widget: "string",
+          hint: "学期 (例) 2020年度退職記念講義",
+        }
+      - { label: "Attachents", name: "attachments", widget: "hidden" }
+      - {
+          label: "Tags",
+          name: "tags",
+          widget: "list",
+          required: false,
+          hint: "タグ (例) 生物",
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+          hint: "概要 (例) 生物学の基礎を学ぶ",
+        }
+      - {
+          label: "Featured Post",
+          name: "featuredpost",
+          widget: "boolean",
+          required: false,
+          hint: "トップページにおいて色付けのロールにするならONにする.",
+        }
+      - {
+          label: "Featured Movie",
+          name: "movie",
+          widget: "string",
+          required: false,
+          hint: "映像の外部リンク https:…",
+        }
+      - {
+          label: "Lecturer's Image",
+          name: "lecturersimage",
+          widget: "string",
+          required: false,
+          hint: "講師画像の外部リンク https:…",
+        }
+      - {
+          label: "Featured Image",
+          name: "featuredimage",
+          widget: "string",
+          required: false,
+          hint: "画像をアップロードして選択. Featured Movieの指定がない場合のみ表示される. ",
+        }
+      - {
+          label: "Featured Image (URL)",
+          name: "featuredimageURL",
+          widget: "string",
+          required: false,
+          hint: "Featured Imageが外部リンクの場合 https:…",
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: "HH:mm:ss+09:00",
+          hint: "更新日時 入力・編集作業をした日時を記入 (例) 2024-10-07T19:21:00+09:00",
+        }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          hint: "本文 Markdownで記述.",
+        }
+
+  - name: "courses-en"
+    label: "Courses-En"
+    summary: "{{fields.course_id}}-{{fields.title}}"
+    folder: "src/pages/en/courses"
+    create: true
+    delete: true
+    # slug: "{{year}}-{{month}}-{{day}}-{{slug}}" #これはデフォルト設定
+    slug: "{{fields.course_id}}-{{slug}}-{{year}}"
+    fields:
+      - {
+          label: "Template Key",
+          name: "templateKey",
+          default: "courses-en",
+          widget: "hidden",
+        }
+      - {
+          label: "Course_id",
+          name: "course_id",
+          widget: "string",
+          hint: "重複せず連番となるよう, 仕事依頼側が設定",
+        }
+      - { label: "Title", name: "title", widget: "string", hint: "講義名" }
+      - {
+          label: "Lecturer",
+          name: "lecturer",
+          widget: "string",
+          hint: "講師名",
+        }
+      - label: "Department"
+        name: "department"
+        hint: "開講部局 (例) School of ○○ / Graduate School of ○○"
+        widget: relation
+        collection: department_en_collection
+        file: departments_en_file
+        options_length: 100
+        searchFields: ["departments_en.*.name"]
+        valueField: departments_en.*.name
+        multiple: false
+      - label: "Other Department"
+        name: "subdepartment"
+        hint: "2つ目以降の開講部局が指定されている場合"
+        required: false
+        multiple: true
+        widget: relation
+        collection: department_en_collection
+        file: departments_en_file
+        options_length: 100
+        searchFields: ["departments_en.*.name"]
+        valueField: departments_en.*.name
+      - {
+          label: "Term",
+          name: "term",
+          widget: "string",
+          hint: "学期 (例) 2020年度春学期",
+        }
+      - {
+          label: "Target",
+          name: "target",
+          widget: "string",
+          hint: "対象者 (例) 〇学部×学科△年生",
+        }
+      - {
+          label: "Classes",
+          name: "classes",
+          widget: "string",
+          required: false,
+          hint: "授業回数 (例) 週１回全15回",
+        }
+      - {
+          label: "Credit",
+          name: "credit",
+          widget: "string",
+          required: false,
+          hint: "単位数 (例) １単位",
+        }
+      - { label: "Attachents", name: "attachments", widget: "hidden" }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "hidden",
+          required: false,
+          hint: "カテゴリー (例) 教養",
+        } # widget: "list"
+      - {
+          label: "Tags",
+          name: "tags",
+          widget: "list",
+          required: false,
+          hint: "タグ (例) 生物",
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+          hint: "概要 (例) 生物学の基礎を学ぶ",
+        }
+      - {
+          label: "Featured Post",
+          name: "featuredpost",
+          required: false,
+          widget: "boolean",
+          hint: "トップページにおいて色付けのロールにするならONに.",
+        }
+      - {
+          label: "Featured Movie",
+          name: "movie",
+          widget: "string",
+          required: false,
+          hint: "映像の外部リンク https:…",
+        }
+      - {
+          label: "Featured Image",
+          name: "featuredimage",
+          widget: "string",
+          required: false,
+          hint: "画像をアップロードして選択. 上の映像がない場合のみ表示される. ",
+        }
+      - {
+          label: "Featured Image (URL)",
+          name: "featuredimageURL",
+          widget: "string",
+          required: false,
+          hint: "Featured Imageが外部リンクの場合 https:…",
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: "HH:mm:ss+09:00",
+          hint: "更新日時 入力・編集作業をした日時を記入 (例) 2024-10-07T19:21:00+09:00",
+        }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          hint: "本文 Markdownで記述.",
+        }
+
+  - name: "news"
+    label: "News"
+    folder: "src/pages/news"
+    create: true
+    delete:
+      true
+      # slug: "{{year}}-{{month}}-{{day}}-{{slug}}" #これはデフォルト設定
+    slug: "{{fields.course_id}}-{{slug}}-{{year}}"
+    fields:
+      - {
+          label: "Template Key",
+          name: "templateKey",
+          default: "news",
+          widget: "hidden",
+        }
+      - label: "Type"
+        name: "type"
+        hint: "タイプを選択 "
+        widget: "select"
+        options:
+          - { label: "授業", value: "courses" }
+          - { label: "特集", value: "topics" }
+          - { label: "退職講義", value: "farewell" }
+          - { label: "特別講義", value: "special" }
+          - { label: "その他", value: "other" }
+      - {
+          label: "Title",
+          name: "title",
+          widget: "string",
+          hint: "更新情報タイトル",
+        }
+      - {
+          label: "Featured Image",
+          name: "featuredimage",
+          widget: "string",
+          required: false,
+          hint: "画像をアップロードして選択. Featured Movieの指定がない場合のみ表示される. ",
+        }
+      - {
+          label: "Link",
+          name: "link",
+          widget: "string",
+          required: false,
+          hint: "関連記事のリンク",
+        }
+      - {
+          label: "Tags",
+          name: "tags",
+          widget: "list",
+          required: false,
+          hint: "タグ (例) 生物",
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: "HH:mm:ss+09:00",
+          hint: "更新日時 入力・編集作業をした日時を記入 (例) 2024-10-07T19:21:00+09:00",
+        }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          hint: "詳細説明　Markdownで記述",
+        }
+      # - {label: "Description", name: "description", widget: "hidden", hint: "概要"}　
+
+  - name: "department"
+    label: "Department"
+    summary: "{{department}}"
+    folder: "src/pages/department"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    fields:
+      - {
+          name: "templateKey",
+          label: "Template Key",
+          default: "department",
+          widget: "hidden",
+        }
+      - name: "department"
+        label: "department"
+        widget: "select"
+        hint: "学部/研究科名"
+        options:
+          - { label: "教養教育院", value: "教養教育院" }
+          - { label: "G30", value: "G30" }
+          - { label: "文学部／人文学研究科", value: "文学部／人文学研究科" }
+          - {
+              label: "教育学部／教育発達科学研究科",
+              value: "教育学部／教育発達科学研究科",
+            }
+          - { label: "法学部／法学研究科", value: "法学部／法学研究科" }
+          - { label: "経済学部／経済学研究科", value: "経済学部／経済学研究科" }
+          - { label: "情報学部／情報学研究科", value: "情報学部／情報学研究科" }
+          - { label: "理学部／理学研究科", value: "理学部／理学研究科" }
+          - { label: "医学部／医学系研究科", value: "医学部／医学系研究科" }
+          - { label: "工学部／工学研究科", value: "工学部／工学研究科" }
+          - { label: "農学部／生命農学研究科", value: "農学部／生命農学研究科" }
+          - { label: "国際開発研究科", value: "国際開発研究科" }
+          - { label: "多元数理科学研究科", value: "多元数理科学研究科" }
+          - { label: "環境学研究科", value: "環境学研究科" }
+          - { label: "創薬科学研究科", value: "創薬科学研究科" }
+          - { label: "博士課程教育推進機構", value: "博士課程教育推進機構" }
+          - {
+              label: "アジアサテライトキャンパス学院",
+              value: "アジアサテライトキャンパス学院",
+            }
+          - { label: "環境医学研究所", value: "環境医学研究所" }
+          - {
+              label: "未来材料・システム研究所",
+              value: "未来材料・システム研究所",
+            }
+          - {
+              label: "アイソトープ総合センター",
+              value: "アイソトープ総合センター",
+            }
+          - {
+              label: "物質科学国際研究センター",
+              value: "物質科学国際研究センター",
+            }
+          - { label: "高等教育研究センター", value: "高等教育研究センター" }
+          - {
+              label: "農学国際教育研究センター",
+              value: "農学国際教育研究センター",
+            }
+          - { label: "博物館", value: "博物館" }
+          - {
+              label: "心の発達支援研究実践センター",
+              value: "心の発達支援研究実践センター",
+            }
+          - {
+              label: "法政国際教育協力研究センター",
+              value: "法政国際教育協力研究センター",
+            }
+          - {
+              label: "生物機能開発利用研究センター",
+              value: "生物機能開発利用研究センター",
+            }
+          - {
+              label: "シンクロトロン光研究センター",
+              value: "シンクロトロン光研究センター",
+            }
+          - { label: "減災連携研究センター", value: "減災連携研究センター" }
+          - { label: "細胞生理学研究センター", value: "細胞生理学研究センター" }
+          - {
+              label: "脳とこころの研究センター",
+              value: "脳とこころの研究センター",
+            }
+          - {
+              label: "ナショナルコンポジットセンター",
+              value: "ナショナルコンポジットセンター",
+            }
+          - { label: "男女共同参画センター", value: "男女共同参画センター" }
+          - {
+              label: "数理・データ科学教育研究センター",
+              value: "数理・データ科学教育研究センター",
+            }
+          - { label: "情報基盤センター", value: "情報基盤センター" }
+          - {
+              label: "未来材料・システム研究所",
+              value: "未来材料・システム研究所",
+            }
+          - { label: "宇宙地球環境研究所", value: "宇宙地球環境研究所" }
+          - {
+              label: "低温プラズマ科学研究センター",
+              value: "低温プラズマ科学研究センター",
+            }
+          - {
+              label: "総合保健体育科学センター",
+              value: "総合保健体育科学センター",
+            }
+          - { label: "国際高等研究機構", value: "国際高等研究機構" }
+          - { label: "素粒子宇宙起源研究所", value: "素粒子宇宙起源研究所" }
+          - { label: "未来社会創造機構", value: "未来社会創造機構" }
+          - { label: "アジア共創教育研究機構", value: "アジア共創教育研究機構" }
+          - {
+              label: "国際環境人材育成センター",
+              value: "国際環境人材育成センター",
+            }
+          - {
+              label: "リーディング大学院推進機構",
+              value: "リーディング大学院推進機構",
+            }
+          - { label: "イノベーション戦略室", value: "イノベーション戦略室" }
+          - { label: "GaN研究戦略室", value: "GaN研究戦略室" }
+          - { label: "財務戦略室", value: "財務戦略室" }
+          - {
+              label: "フューチャー・アース研究センター",
+              value: "フューチャー・アース研究センター",
+            }
+          - {
+              label: "名大・理研科学技術連携センター",
+              value: "名大・理研科学技術連携センター",
+            }
+          - { label: "学生相談総合センター", value: "学生相談総合センター" }
+          - { label: "留学生相談室", value: "留学生相談室" }
+          - { label: "赤崎記念研究センター", value: "赤崎記念研究センター" }
+          - {
+              label: "予防早期医療創成センター",
+              value: "予防早期医療創成センター",
+            }
+          - { label: "全学技術センター", value: "全学技術センター" }
+          - { label: "大学本部事務局", value: "大学本部事務局" }
+          - { label: "研究協力部社会連携課", value: "研究協力部社会連携課" }
+          - { label: "男女共同参画室", value: "男女共同参画室" }
+          - { label: "遺伝子実験施設", value: "遺伝子実験施設" }
+          - {
+              label: "自然科学研究機構 核融合科学研究所",
+              value: "自然科学研究機構 核融合科学研究所",
+            }
+          - { label: "文学部／文学研究科", value: "文学部／文学研究科" }
+          - {
+              label: "文学部／国際言語文化研究科",
+              value: "文学部／国際言語文化研究科",
+            }
+          - { label: "情報文化学部", value: "情報文化学部" }
+          - { label: "情報科学研究科", value: "情報科学研究科" }
+          - { label: "地球水循環研究センター", value: "地球水循環研究センター" }
+          - { label: "情報連携基盤センター", value: "情報連携基盤センター" }
+          - { label: "高等研究院", value: "高等研究院" }
+          - { label: "附属図書館", value: "附属図書館" }
+          - { label: "国際機構", value: "国際機構" }
+          - {
+              label: "発達心理精神科学教育研究センター ",
+              value: "発達心理精神科学教育研究センター ",
+            }
+          - {
+              label: "農学国際教育協力研究センター",
+              value: "農学国際教育協力研究センター",
+            }
+          - {
+              label: "ナショナルコンポジットセンター ",
+              value: "ナショナルコンポジットセンター ",
+            }
+          - { label: "エコトピア科学研究所", value: "エコトピア科学研究所" }
+          - {
+              label: "年代測定総合研究センター",
+              value: "年代測定総合研究センター",
+            }
+          - {
+              label: "教育学部附属中・高等学校",
+              value: "教育学部附属中・高等学校",
+            }
+          - { label: "その他", value: "その他" }
+      - name: "title"
+        label: "title"
+        widget: "select"
+        hint: "学部/研究科名 (DEPARTMENT と同じ値を指定すること)"
+        options:
+          - { label: "教養教育院", value: "教養教育院" }
+          - { label: "G30", value: "G30" }
+          - { label: "文学部／人文学研究科", value: "文学部／人文学研究科" }
+          - {
+              label: "教育学部／教育発達科学研究科",
+              value: "教育学部／教育発達科学研究科",
+            }
+          - { label: "法学部／法学研究科", value: "法学部／法学研究科" }
+          - { label: "経済学部／経済学研究科", value: "経済学部／経済学研究科" }
+          - { label: "情報学部／情報学研究科", value: "情報学部／情報学研究科" }
+          - { label: "理学部／理学研究科", value: "理学部／理学研究科" }
+          - { label: "医学部／医学系研究科", value: "医学部／医学系研究科" }
+          - { label: "工学部／工学研究科", value: "工学部／工学研究科" }
+          - { label: "農学部／生命農学研究科", value: "農学部／生命農学研究科" }
+          - { label: "国際開発研究科", value: "国際開発研究科" }
+          - { label: "多元数理科学研究科", value: "多元数理科学研究科" }
+          - { label: "環境学研究科", value: "環境学研究科" }
+          - { label: "創薬科学研究科", value: "創薬科学研究科" }
+          - { label: "博士課程教育推進機構", value: "博士課程教育推進機構" }
+          - {
+              label: "アジアサテライトキャンパス学院",
+              value: "アジアサテライトキャンパス学院",
+            }
+          - { label: "環境医学研究所", value: "環境医学研究所" }
+          - {
+              label: "未来材料・システム研究所",
+              value: "未来材料・システム研究所",
+            }
+          - {
+              label: "アイソトープ総合センター",
+              value: "アイソトープ総合センター",
+            }
+          - {
+              label: "物質科学国際研究センター",
+              value: "物質科学国際研究センター",
+            }
+          - { label: "高等教育研究センター", value: "高等教育研究センター" }
+          - {
+              label: "農学国際教育研究センター",
+              value: "農学国際教育研究センター",
+            }
+          - { label: "博物館", value: "博物館" }
+          - {
+              label: "心の発達支援研究実践センター",
+              value: "心の発達支援研究実践センター",
+            }
+          - {
+              label: "法政国際教育協力研究センター",
+              value: "法政国際教育協力研究センター",
+            }
+          - {
+              label: "生物機能開発利用研究センター",
+              value: "生物機能開発利用研究センター",
+            }
+          - {
+              label: "シンクロトロン光研究センター",
+              value: "シンクロトロン光研究センター",
+            }
+          - { label: "減災連携研究センター", value: "減災連携研究センター" }
+          - { label: "細胞生理学研究センター", value: "細胞生理学研究センター" }
+          - {
+              label: "脳とこころの研究センター",
+              value: "脳とこころの研究センター",
+            }
+          - {
+              label: "ナショナルコンポジットセンター",
+              value: "ナショナルコンポジットセンター",
+            }
+          - { label: "男女共同参画センター", value: "男女共同参画センター" }
+          - {
+              label: "数理・データ科学教育研究センター",
+              value: "数理・データ科学教育研究センター",
+            }
+          - { label: "情報基盤センター", value: "情報基盤センター" }
+          - {
+              label: "未来材料・システム研究所",
+              value: "未来材料・システム研究所",
+            }
+          - { label: "宇宙地球環境研究所", value: "宇宙地球環境研究所" }
+          - {
+              label: "低温プラズマ科学研究センター",
+              value: "低温プラズマ科学研究センター",
+            }
+          - {
+              label: "総合保健体育科学センター",
+              value: "総合保健体育科学センター",
+            }
+          - { label: "国際高等研究機構", value: "国際高等研究機構" }
+          - { label: "素粒子宇宙起源研究所", value: "素粒子宇宙起源研究所" }
+          - { label: "未来社会創造機構", value: "未来社会創造機構" }
+          - { label: "アジア共創教育研究機構", value: "アジア共創教育研究機構" }
+          - {
+              label: "国際環境人材育成センター",
+              value: "国際環境人材育成センター",
+            }
+          - {
+              label: "リーディング大学院推進機構",
+              value: "リーディング大学院推進機構",
+            }
+          - { label: "イノベーション戦略室", value: "イノベーション戦略室" }
+          - { label: "GaN研究戦略室", value: "GaN研究戦略室" }
+          - { label: "財務戦略室", value: "財務戦略室" }
+          - {
+              label: "フューチャー・アース研究センター",
+              value: "フューチャー・アース研究センター",
+            }
+          - {
+              label: "名大・理研科学技術連携センター",
+              value: "名大・理研科学技術連携センター",
+            }
+          - { label: "学生相談総合センター", value: "学生相談総合センター" }
+          - { label: "留学生相談室", value: "留学生相談室" }
+          - { label: "赤崎記念研究センター", value: "赤崎記念研究センター" }
+          - {
+              label: "予防早期医療創成センター",
+              value: "予防早期医療創成センター",
+            }
+          - { label: "全学技術センター", value: "全学技術センター" }
+          - { label: "大学本部事務局", value: "大学本部事務局" }
+          - { label: "研究協力部社会連携課", value: "研究協力部社会連携課" }
+          - { label: "男女共同参画室", value: "男女共同参画室" }
+          - { label: "遺伝子実験施設", value: "遺伝子実験施設" }
+          - {
+              label: "自然科学研究機構 核融合科学研究所",
+              value: "自然科学研究機構 核融合科学研究所",
+            }
+          - { label: "文学部／文学研究科", value: "文学部／文学研究科" }
+          - {
+              label: "文学部／国際言語文化研究科",
+              value: "文学部／国際言語文化研究科",
+            }
+          - { label: "情報文化学部", value: "情報文化学部" }
+          - { label: "情報科学研究科", value: "情報科学研究科" }
+          - { label: "地球水循環研究センター", value: "地球水循環研究センター" }
+          - { label: "情報連携基盤センター", value: "情報連携基盤センター" }
+          - { label: "高等研究院", value: "高等研究院" }
+          - { label: "附属図書館", value: "附属図書館" }
+          - { label: "国際機構", value: "国際機構" }
+          - {
+              label: "発達心理精神科学教育研究センター ",
+              value: "発達心理精神科学教育研究センター ",
+            }
+          - {
+              label: "農学国際教育協力研究センター",
+              value: "農学国際教育協力研究センター",
+            }
+          - {
+              label: "ナショナルコンポジットセンター ",
+              value: "ナショナルコンポジットセンター ",
+            }
+          - { label: "エコトピア科学研究所", value: "エコトピア科学研究所" }
+          - {
+              label: "年代測定総合研究センター",
+              value: "年代測定総合研究センター",
+            }
+          - {
+              label: "教育学部附属中・高等学校",
+              value: "教育学部附属中・高等学校",
+            }
+          - { label: "その他", value: "その他" }
+      - {
+          name: "subtitle",
+          label: "subtitle",
+          required: false,
+          hint: "学部/研究科に関する補足事項 (例) （平成29年度学生募集停止）",
+        }
+      - {
+          name: "director",
+          label: "director",
+          required: false,
+          hint: "学部長名",
+        }
+      - {
+          name: "departmentOrder",
+          label: "department order",
+          hint: "学部を一覧表示したときの表示順",
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: "HH:mm:ss+09:00",
+          hint: "更新日時 入力・編集作業をした日時を記入 (例) 2024/10/ 19:21",
+        }
+      - { name: "headerImage", label: "headerImage", required: false }
+      - { name: "featuredimage", label: "featuredimage", required: false }
+      - {
+          name: "description",
+          label: "description",
+          widget: "text",
+          required: false,
+          hint: "本文冒頭200~300文字程度の抜粋",
+        }
+      - { name: "tags", label: "tags", widget: "list" }
+      - {
+          name: "body",
+          label: "body",
+          widget: "markdown",
+          hint: "本文 Markdownで記述.",
+        }
+  - name: "department-en"
+    label: "Department-En"
+    summary: "{{department}}"
+    folder: "src/pages/en/department"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    fields:
+      - {
+          name: "templateKey",
+          label: "Template Key",
+          default: "department-en",
+          widget: "hidden",
+        }
+      - label: "Department"
+        name: "department"
+        hint: "学部/研究科名"
+        widget: "select"
+        options:
+          - {
+              label: "Education Center for International Students",
+              value: "Education Center for International Students",
+            }
+          - { label: "G30", value: "G30" }
+          - {
+              label: "Graduate School of Environmental Studies",
+              value: "Graduate School of Environmental Studies",
+            }
+          - {
+              label: "Graduate School of Information Science",
+              value: "Graduate School of Information Science",
+            }
+          - {
+              label: "Graduate School of International Development",
+              value: "Graduate School of International Development",
+            }
+          - {
+              label: "Graduate School of Languages and Cultures",
+              value: "Graduate School of Languages and Cultures",
+            }
+          - {
+              label: "Graduate School of Mathematics",
+              value: "Graduate School of Mathematics",
+            }
+          - {
+              label: "Graduate School of Pharmaceutical Sciences",
+              value: "Graduate School of Pharmaceutical Sciences",
+            }
+          - {
+              label: "Institute of Liberal Arts & Sciences",
+              value: "Institute of Liberal Arts & Sciences",
+            }
+          - {
+              label: "Institute of International Education & Exchange",
+              value: "Institute of International Education & Exchange",
+            }
+          - {
+              label: "School of Agricultural Sciences / Graduate School of Bioagricultural Sciences",
+              value: "School of Agricultural Sciences / Graduate School of Bioagricultural Sciences",
+            }
+          - {
+              label: "School of Economics / Graduate School of Economics",
+              value: "School of Economics / Graduate School of Economics",
+            }
+          - {
+              label: "School of Education / Graduate School of Education and Human Development",
+              value: "School of Education / Graduate School of Education and Human Development",
+            }
+          - {
+              label: "School of Engineering / Graduate School of Engineering",
+              value: "School of Engineering / Graduate School of Engineering",
+            }
+          - {
+              label: "School of Humanities / Graduate School of Humanities",
+              value: "School of Humanities / Graduate School of Humanities",
+            }
+          - {
+              label: "School of Informatics and Sciences",
+              value: "School of Informatics and Sciences",
+            }
+          - {
+              label: "School of Informatics / Graduate School of Informatics",
+              value: "School of Informatics / Graduate School of Informatics",
+            }
+          - {
+              label: "School of Law / Graduate School of Law",
+              value: "School of Law / Graduate School of Law",
+            }
+          - {
+              label: "School of Medicine / Graduate School of Medicine",
+              value: "School of Medicine / Graduate School of Medicine",
+            }
+          - {
+              label: "School of Science / Graduate School of Science",
+              value: "School of Science / Graduate School of Science",
+            }
+      - name: "title"
+        label: "title"
+        widget: "select"
+        hint: "学部/研究科名 (DEPARTMENT と同じ値を指定すること)"
+        options:
+          - {
+              label: "Education Center for International Students",
+              value: "Education Center for International Students",
+            }
+          - { label: "G30", value: "G30" }
+          - {
+              label: "Graduate School of Environmental Studies",
+              value: "Graduate School of Environmental Studies",
+            }
+          - {
+              label: "Graduate School of Information Science",
+              value: "Graduate School of Information Science",
+            }
+          - {
+              label: "Graduate School of International Development",
+              value: "Graduate School of International Development",
+            }
+          - {
+              label: "Graduate School of Languages and Cultures",
+              value: "Graduate School of Languages and Cultures",
+            }
+          - {
+              label: "Graduate School of Mathematics",
+              value: "Graduate School of Mathematics",
+            }
+          - {
+              label: "Graduate School of Pharmaceutical Sciences",
+              value: "Graduate School of Pharmaceutical Sciences",
+            }
+          - {
+              label: "Institute of Liberal Arts & Sciences",
+              value: "Institute of Liberal Arts & Sciences",
+            }
+          - {
+              label: "Institute of International Education & Exchange",
+              value: "Institute of International Education & Exchange",
+            }
+          - {
+              label: "School of Agricultural Sciences / Graduate School of Bioagricultural Sciences",
+              value: "School of Agricultural Sciences / Graduate School of Bioagricultural Sciences",
+            }
+          - {
+              label: "School of Economics / Graduate School of Economics",
+              value: "School of Economics / Graduate School of Economics",
+            }
+          - {
+              label: "School of Education / Graduate School of Education and Human Development",
+              value: "School of Education / Graduate School of Education and Human Development",
+            }
+          - {
+              label: "School of Engineering / Graduate School of Engineering",
+              value: "School of Engineering / Graduate School of Engineering",
+            }
+          - {
+              label: "School of Humanities / Graduate School of Humanities",
+              value: "School of Humanities / Graduate School of Humanities",
+            }
+          - {
+              label: "School of Informatics and Sciences",
+              value: "School of Informatics and Sciences",
+            }
+          - {
+              label: "School of Informatics / Graduate School of Informatics",
+              value: "School of Informatics / Graduate School of Informatics",
+            }
+          - {
+              label: "School of Law / Graduate School of Law",
+              value: "School of Law / Graduate School of Law",
+            }
+          - {
+              label: "School of Medicine / Graduate School of Medicine",
+              value: "School of Medicine / Graduate School of Medicine",
+            }
+          - {
+              label: "School of Science / Graduate School of Science",
+              value: "School of Science / Graduate School of Science",
+            }
+      - {
+          name: "subtitle",
+          label: "subtitle",
+          required: false,
+          hint: "学部/研究科に関する補足事項 (例) （平成29年度学生募集停止）",
+        }
+      - {
+          name: "director",
+          label: "director",
+          required: false,
+          hint: "学部長名",
+        }
+      - {
+          name: "departmentOrder",
+          label: "department order",
+          hint: "学部を一覧表示したときの表示順",
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: "HH:mm:ss+09:00",
+          hint: "更新日時 入力・編集作業をした日時を記入 (例) 2024/10/ 19:21",
+        }
+      - { name: "headerImage", label: "headerImage", required: false }
+      - { name: "featuredimage", label: "featuredimage", required: false }
+      - {
+          name: "description",
+          label: "description",
+          widget: "text",
+          hint: "本文冒頭200~300文字程度の抜粋",
+        }
+      - { name: "tags", label: "tags", widget: "list" }
+      - {
+          name: "body",
+          label: "body",
+          widget: "markdown",
+          hint: "本文 Markdownで記述.",
+        }
+  # 以下ページではCMSを使用して編集しない.
+  # - name: "pages"
+  #   label: "Pages"
+  #   files:
+  #     - file: "src/pages/index.md"
+  #       label: "Landing Page"
+  #       name: "index"
+  #       fields:
+  #         - {label: "Template Key", name: "templateKey", widget: "hidden", default: "index-page"}
+  #         - {label: Title, name: title, widget: string}
+  #         - {label: Image, name: image, widget: image}
+  #         - {label: Heading, name: heading, widget: string}
+  #         - {label: Subheading, name: subheading, widget: string}
+  #         - {label: Mainpitch, name: mainpitch, widget: object, fields: [{label: Title, name: title, widget: string}, {label: Description, name: description, widget: text}]}
+  #         - {label: Description, name: description, widget: string}
+  #         - {label: Intro, name: intro, widget: object, fields: [{label: Heading, name: heading, widget: string}, {label: Description, name: description, widget: text}, {label: Blurbs, name: blurbs, widget: list, fields: [{label: Image, name: image, widget: image}, {label: Text, name: text, widget: text}]}]}
+  #         - {label: Main, name: main, widget: object, fields: [{label: Heading, name: heading, widget: string}, {label: Description, name: description, widget: text}, {label: Image1, name: image1, widget: object, fields: [{label: Image, name: image, widget: image}, {label: Alt, name: alt, widget: string}]}, {label: Image2, name: image2, widget: object, fields: [{label: Image, name: image, widget: image}, {label: Alt, name: alt, widget: string}]}, {label: Image3, name: image3, widget: object, fields: [{label: Image, name: image, widget: image}, {label: Alt, name: alt, widget: string}]}]}
+  #     - file: "src/pages/about/index.md"
+  #       label: "About"
+  #       name: "about"
+  #       fields:
+  #         - {label: "Template Key", name: "templateKey", widget: "hidden", default: "about-page"}
+  #         - {label: "Title", name: "title", widget: "string"}
+  #         - {label: "Body", name: "body", widget: "markdown"}
+  #     - file: "src/pages/products/index.md"
+  #       label: "Products Page"
+  #       name: "products"
+  #       fields:
+  #         - {label: "Template Key", name: "templateKey", widget: "hidden", default: "product-page"}
+  #         - {label: Title, name: title, widget: string}
+  #         - {label: Image, name: image, widget: image}
+  #         - {label: Heading, name: heading, widget: string}
+  #         - {label: Description, name: description, widget: string}
+  #         - {label: Intro, name: intro, widget: object, fields: [{label: Heading, name: heading, widget: string}, {label: Description, name: description, widget: text}, {label: Blurbs, name: blurbs, widget: list, fields: [{label: Image, name: image, widget: image}, {label: Text, name: text, widget: text}]}]}
+  #         - {label: Main, name: main, widget: object, fields: [{label: Heading, name: heading, widget: string}, {label: Description, name: description, widget: text}, {label: Image1, name: image1, widget: object, fields: [{label: Image, name: image, widget: image}, {label: Alt, name: alt, widget: string}]}, {label: Image2, name: image2, widget: object, fields: [{label: Image, name: image, widget: image}, {label: Alt, name: alt, widget: string}]}, {label: Image3, name: image3, widget: object, fields: [{label: Image, name: image, widget: image}, {label: Alt, name: alt, widget: string}]}]}
+  #         - {label: Testimonials, name: testimonials, widget: list, fields: [{label: Quote, name: quote, widget: string}, {label: Author, name: author, widget: string}]}
+  #         - {label: Full_image, name: full_image, widget: image}
+  #         - {label: Pricing, name: pricing, widget: object, fields: [{label: Heading, name: heading, widget: string}, {label: Description, name: description, widget: string}, {label: Plans, name: plans, widget: list, fields: [{label: Plan, name: plan, widget: string}, {label: Price, name: price, widget: string}, {label: Description, name: description, widget: string}, {label: Items, name: items, widget: list}]}]}

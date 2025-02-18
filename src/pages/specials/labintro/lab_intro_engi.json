@@ -1,0 +1,68 @@
+[
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/f6560d8b41709bd55b90b0457dc93cbec98feeee",
+    "img": "img/lab_intro/engi/organic_materials.jpg",
+    "department": "化学生命工学科",
+    "labname": "有機構造化学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/f2522d993a27c6d7fa9aa1269d864cd52ad24454",
+    "img": "img/lab_intro/engi/biomechanical_control.jpg",
+    "department": "機械･航空宇宙工学科",
+    "labname": "生体システム制御研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/0705b56ed2ee7c52257f6554515cd86d956ea6ea",
+    "img": "img/lab_intro/engi/intelligent_robotics.jpg",
+    "department": "機械･航空宇宙工学科",
+    "labname": "知能ロボット学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/77de9b371a1990dca60e29ffa38dea020a3dedff",
+    "img": "img/lab_intro/engi/applied_nuclear_physics.jpg",
+    "department": "エネルギー理工学科",
+    "labname": "応用核物理学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/5f8adc1d0a4d4b5f4330cf030a93866733bef88c",
+    "img": "img/lab_intro/engi/energy_nanomaterials.jpg",
+    "department": "エネルギー理工学科",
+    "labname": "エネルギーナノマテリアル科学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/6503c0c5bbfa8f0581575c06812f70669ffdf748",
+    "img": "img/lab_intro/engi/nuclear_energy_control.jpg",
+    "department": "エネルギー理工学科",
+    "labname": "原子核エネルギー制御工学"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/983b8f5eb23b20585044bb01cf463687fdab44d3",
+    "img": "img/lab_intro/engi/fusion_reactor.jpg",
+    "department": "エネルギー理工学科",
+    "labname": "核融合炉工学研究グループ"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/a95b52e524d641c0fcbe22f0ef9993d1200ea74f",
+    "img": "img/lab_intro/engi/national_land_use_design.jpg",
+    "department": "環境土木･建築学科",
+    "labname": "国土デザイン研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/7447e2fe9118d1df57af557481619bd98cccd6f4",
+    "img": "img/lab_intro/engi/soil_mechanics_engi.jpg",
+    "department": "環境土木･建築学科",
+    "labname": "地盤工学講座"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/57a9aace47803cabe5d977cf0442ba4abb184ba4",
+    "img": "img/lab_intro/engi/coastal_and_ocean.jpg",
+    "department": "環境土木･建築学科",
+    "labname": "海岸・海洋工学研究室"
+  },
+  {
+    "video": "http://nuvideo.media.nagoya-u.ac.jp/embed/dee354885bc0c53830270007e5aaa877e2656933",
+    "img": "img/lab_intro/engi/infra_systems_planning.jpg",
+    "department": "環境土木･建築学科",
+    "labname": "社会基盤機能学講座"
+  }
+]

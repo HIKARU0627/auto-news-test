@@ -1,0 +1,57 @@
+on:
+  push:
+    branches: [master]
+    paths:
+      - "src/pages/courses/*.md"
+  workflow_dispatch: # 手動で動かす時
+
+jobs:
+  convert_and_post:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        # This is the version of the action for setting up Python, not the Python version.
+        uses: actions/setup-python@v4
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: "3.x"
+          # Optional - x64 or x86 architecture, defaults to x64
+          architecture: "x64"
+      # You can test your matrix by printing the current Python version
+      - name: Install dependencies
+        run: |
+          pip install -r .github/workflows/to_edit_system/requirements.txt
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+        # 変更されたファイルを受け取る
+      - name: Get changed files
+        uses: tj-actions/changed-files@v35.7.1
+        id: changed-files
+        with:
+          files: |
+            **/*.md
+          files_separator: "\n"
+      - name: Output changed files
+        run: echo ${{ steps.changed-files.outputs.all_changed_files }}
+
+        # JSON形式に変換,送信
+      - name: Convert Markdown to JSON
+        id: convert
+        run: |
+          changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
+          python .github/workflows/to_edit_system/convert_markdown_to_json.py $changed_files > result.txt
+          json_data=$(cat result.txt)
+          echo "json_data=$json_data" >> $GITHUB_OUTPUT
+        shell: bash
+
+        # 結果を表示
+      - name: Output json file
+        run: echo ${{ steps.convert.outputs.json_data }}

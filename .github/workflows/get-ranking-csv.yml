@@ -1,0 +1,52 @@
+name: get ranking and save as csv
+on:
+  schedule:
+    - cron: "5 19 * * *"
+  workflow_dispatch:
+
+jobs:
+  get-and-save-ranking:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/ranking/get-ranking/python-script
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RANKING_GITHUB_TOKEN_OCW_ACCOUNT }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install
+
+      - name: Run script
+        run: |
+          poetry run python ./src/main.py
+        env:
+          SPREAD_SHEET_ID: ${{ secrets.RANKING_GOOGLE_SPREAD_SHEET_ID }}
+          SHEET_ID_COURSES: ${{ secrets.RANKING_GOOGLE_SHEET_ID_COURSES }}
+          SHEET_ID_EN_COURSES: ${{ secrets.RANKING_GOOGLE_SHEET_ID_EN_COURSES }}
+          SHEET_ID_FAREWELL: ${{ secrets.RANKING_GOOGLE_SHEET_ID_FAREWELL }}
+
+      - name: mv
+        run: mv ./downloads/* ../../data/
+
+      - name: commit and push
+        run: |
+          git config --global user.email "${{ secrets.RANKING_GITHUB_ACCOUNT_EMAIL }}"
+          git config --global user.name "NUOCW"
+          git add ../../data/*
+          git commit -m "[update] ranking csv"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.RANKING_GITHUB_TOKEN_OCW_ACCOUNT }}
